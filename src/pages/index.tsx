@@ -1,8 +1,25 @@
-import Head from 'next/head'
-import { useEffect } from 'react'
-import Header from '../components/Header'
+import React, { useEffect } from 'react'
+import {GetStaticProps, GetServerSideProps } from 'next'
+import api from '../services/api'
 
-export default function Home(props) {
+interface Episode {
+  id: string
+  title: string
+  description: string
+  members: string
+  published_at: string
+  file: {
+    type: string
+    duration: number
+    url: string
+  }
+}
+interface HomeProps {
+  episodes: Episode[]
+
+}
+
+const Home: React.VFC<HomeProps> = (props) => {
 
   console.log(props.episodes)
   // SPA
@@ -17,24 +34,29 @@ export default function Home(props) {
   )
 }
 
+export default Home
+
 // SSR
-// export async function getServerSideProps() {
-//   const response = await fetch('http://localhost:3333/episodes')
-//   const data = await response.json()
-//   console.log(data)
+// export const getServerSideProps: GetServerSideProps = async () => {
+//   const response = await api.get('episodes?_limit=12&_sort=published_at&_order=desc')
+//   console.log(response.data)
 
 //   return {
 //     props: {
-//       episodes: data
+//       episodes: response.data
 //     }
 //   }
 // }
 
 // SSG (works just as production)
-export async function getStaticProps() {
-  const response = await fetch('http://localhost:3333/episodes')
-  const data = await response.json()
-  console.log(data)
+export const getStaticProps: GetStaticProps = async () => {
+  const { data } = await api.get('episodes', {
+    params: {
+      _limit: 12,
+      _sort: 'published_at',
+      _order: 'desc'
+    }
+  })
 
   return {
     props: {
