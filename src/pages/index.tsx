@@ -66,7 +66,46 @@ const Home: React.VFC<HomeProps> = ({ latestEpisodes, allEpisodes }) => {
       </section>
 
       <section className={styles.allEpisodes}>
+      <h2>All Episodes</h2>
 
+      <table cellSpacing={0}>
+        
+        <thead>
+          <th></th>
+          <th>Podcast</th>
+          <th>Members</th>
+          <th>Date</th>
+          <th>Duration</th>
+          <th></th>
+        </thead>
+
+        <tbody>
+          {allEpisodes.map(episode => (
+            <tr key={episode.id}>
+              <td style={{ width: 72}}>
+                <Image
+                  width={120}
+                  height={120}
+                  src={episode.thumbnail}
+                  alt={episode.title}
+                  objectFit="cover"
+                />
+              </td>
+              <td>
+                <a href="">{episode.title}</a>
+              </td>
+              <td>{episode.members}</td>
+              <td style={{ width: 120}}>{episode.publishedAt}</td>
+              <td>{episode.durationAsString}</td>
+              <td>
+                <button>
+                  <img src="/play-green.svg" alt="Play episode"/>
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       </section>
     </div>
   )
@@ -101,7 +140,7 @@ export const getStaticProps: GetStaticProps = async () => {
     title: episode.title,
     thumbnail: episode.thumbnail,
     members: episode.members,
-    publishedAt: format(parseISO(episode.published_at), 'd/MMM - yyyy', { locale: enGB }),
+    publishedAt: format(parseISO(episode.published_at), 'yy/MMM/d', { locale: enGB }),
     duration: Number(episode.file.duration),
     durationAsString: convertDurationToTimeString(Number(episode.file.duration)),
     description: episode.description,
