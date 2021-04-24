@@ -6,7 +6,7 @@ const Player: React.VFC = () => {
     <div className={styles.playerContainer}>
       <header>
         <img src="/playing.svg" alt="Playing now"/>
-        Palying now
+        Playing now
       </header>
 
       <div className={styles.emptyPlayer}>

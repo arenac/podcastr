@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react'
 import {GetStaticProps, GetServerSideProps } from 'next'
+import Image from 'next/image'
+import React, { useEffect } from 'react'
 import { format, parseISO } from 'date-fns'
 import enGB from 'date-fns/locale/en-GB'
 
 import api from '../services/api'
-import { converDurationToTimeString } from '../utils/converDurationToTimeString'
+import { convertDurationToTimeString } from '../utils/convertDurationToTimeString'
 
 import styles from './home.module.scss'
 
@@ -27,8 +28,6 @@ interface HomeProps {
 
 const Home: React.VFC<HomeProps> = ({ latestEpisodes, allEpisodes }) => {
 
-  console.log('latestEpisodes', latestEpisodes)
-  console.log('allEpisodes', allEpisodes)
   // SPA
   // useEffect(() => {
   //   fetch('http://localhost:3333/episodes')
@@ -41,8 +40,27 @@ const Home: React.VFC<HomeProps> = ({ latestEpisodes, allEpisodes }) => {
       <section className={styles.latestEpisodes}>
         <h2>Latest launches</h2>
         <ul>
-          {latestEpisodes.map(episode => (
-            <li>{episode.title}</li>
+          {latestEpisodes.map((episode) => (
+            <li key={episode.id}>
+              <Image 
+                src={episode.thumbnail} 
+                alt={episode.title} 
+                width={192} 
+                height={192}
+                objectFit="cover"
+              />
+
+              <div className={styles.episodesDetails}>
+                <a href="">{episode.title}</a>
+                <p>{episode.members}</p>
+                <span>{episode.publishedAt}</span>
+                <span>{episode.durationAsString}</span>
+              </div>
+
+              <button type="button">
+                <img src="/play-green.svg" alt="Play episode"/>
+              </button>
+            </li>
           ))}
         </ul>
       </section>
@@ -85,7 +103,7 @@ export const getStaticProps: GetStaticProps = async () => {
     members: episode.members,
     publishedAt: format(parseISO(episode.published_at), 'd/MMM - yyyy', { locale: enGB }),
     duration: Number(episode.file.duration),
-    durationAsString: converDurationToTimeString(Number(episode.file.duration)),
+    durationAsString: convertDurationToTimeString(Number(episode.file.duration)),
     description: episode.description,
     url: episode.file.url
   })) as Episode[]
