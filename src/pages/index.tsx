@@ -1,27 +1,34 @@
 import React, { useEffect } from 'react'
 import {GetStaticProps, GetServerSideProps } from 'next'
+import { format, parseISO } from 'date-fns'
+import enGB from 'date-fns/locale/en-GB'
+
 import api from '../services/api'
+import { converDurationToTimeString } from '../utils/converDurationToTimeString'
+
+import styles from './home.module.scss'
 
 interface Episode {
   id: string
-  title: string
-  description: string
-  members: string
-  published_at: string
-  file: {
-    type: string
-    duration: number
-    url: string
-  }
+  title: string,
+  thumbnail: string,
+  members: string,
+  publishedAt: string,
+  duration: number,
+  durationAsString: string,
+  description: string,
+  url: string
 }
 interface HomeProps {
-  episodes: Episode[]
+  latestEpisodes: Episode[]
+  allEpisodes: Episode[]
 
 }
 
-const Home: React.VFC<HomeProps> = (props) => {
+const Home: React.VFC<HomeProps> = ({ latestEpisodes, allEpisodes }) => {
 
-  console.log(props.episodes)
+  console.log('latestEpisodes', latestEpisodes)
+  console.log('allEpisodes', allEpisodes)
   // SPA
   // useEffect(() => {
   //   fetch('http://localhost:3333/episodes')
@@ -30,7 +37,20 @@ const Home: React.VFC<HomeProps> = (props) => {
   // }, [])
 
   return (
-    <h1>Index</h1>
+    <div className={styles.homePage}>
+      <section className={styles.latestEpisodes}>
+        <h2>Latest launches</h2>
+        <ul>
+          {latestEpisodes.map(episode => (
+            <li>{episode.title}</li>
+          ))}
+        </ul>
+      </section>
+
+      <section className={styles.allEpisodes}>
+
+      </section>
+    </div>
   )
 }
 
@@ -58,9 +78,25 @@ export const getStaticProps: GetStaticProps = async () => {
     }
   })
 
+  const episodes = data.map(episode => ({
+    id: episode.id,
+    title: episode.title,
+    thumbnail: episode.thumbnail,
+    members: episode.members,
+    publishedAt: format(parseISO(episode.published_at), 'd/MMM - yyyy', { locale: enGB }),
+    duration: Number(episode.file.duration),
+    durationAsString: converDurationToTimeString(Number(episode.file.duration)),
+    description: episode.description,
+    url: episode.file.url
+  })) as Episode[]
+
+  const latestEpisodes = episodes.slice(0, 2)
+  const allEpisodes = episodes.slice(2, episodes.length)
+
   return {
     props: {
-      episodes: data
+      latestEpisodes,
+      allEpisodes,
     },
     revalidate: 60 * 60, // will request each our the API
   }
