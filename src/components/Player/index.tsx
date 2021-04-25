@@ -1,16 +1,22 @@
 
+import { useContext } from 'react'
+import { PlayerContext } from '../../contexts/PlayerContext'
 import styles from './styles.module.scss'
 
 const Player: React.VFC = () => {
+  const { episodes, currentEpisodeIndex } = useContext(PlayerContext)
+
+  const episode = episodes[currentEpisodeIndex]
+
   return (
     <div className={styles.playerContainer}>
       <header>
         <img src="/playing.svg" alt="Playing now"/>
-        Playing now
+        Playing now {episode?.title}
       </header>
 
       <div className={styles.emptyPlayer}>
-        <strong>Select a postcast to listen</strong>
+        <strong>Select a podcast to listen</strong>
       </div>
 
       <footer className={styles.empty}>

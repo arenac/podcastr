@@ -5,26 +5,17 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import Link from 'next/link'
 import api from '../../services/api'
 import { convertDurationToTimeString } from '../../utils/convertDurationToTimeString'
+import { Episode } from '../../types/Episode'
 
 import styles from './episodes.module.scss'
-
-interface Episode {
-  id: string
-  title: string,
-  thumbnail: string,
-  members: string,
-  publishedAt: string,
-  duration: number,
-  durationAsString: string,
-  url: string
-  description: string,
-}
-
+import { useContext } from 'react'
+import { PlayerContext } from '../../contexts/PlayerContext'
 interface EpisodeProps {
   episode: Episode
 }
 
-const Episode: React.VFC<EpisodeProps> = ({ episode }) => {
+const Episodes: React.VFC<EpisodeProps> = ({ episode }) => {
+  const { play } = useContext(PlayerContext)
   return(
     <div className={styles.episode}>
       <div className={styles.thumbnailContainer}>
@@ -39,7 +30,7 @@ const Episode: React.VFC<EpisodeProps> = ({ episode }) => {
           src={episode.thumbnail}
           objectFit="cover"
         />
-        <button>
+        <button onClick={() => play(episode)}>
           <img src="/play.svg" alt="Play episode"/>
         </button>
       </div>
@@ -59,7 +50,7 @@ const Episode: React.VFC<EpisodeProps> = ({ episode }) => {
   )
 }
 
-export default Episode
+export default Episodes
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const { data } = await api.get('episodes', {
