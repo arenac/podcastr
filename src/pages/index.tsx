@@ -9,19 +9,9 @@ import api from '../services/api'
 import { convertDurationToTimeString } from '../utils/convertDurationToTimeString'
 
 import styles from './home.module.scss'
-import { PlayerContext } from '../contexts/PlayerContext'
+import { usePlayer } from '../contexts/PlayerContext'
 import { Episode } from '../types/Episode'
 
-// export interface Episode {
-//   id: string
-//   title: string
-//   thumbnail: string
-//   members: string
-//   publishedAt: string
-//   duration: number
-//   durationAsString: string
-//   url: string
-// }
 interface HomeProps {
   latestEpisodes: Episode[]
   allEpisodes: Episode[]
@@ -29,7 +19,7 @@ interface HomeProps {
 }
 
 const Home: React.VFC<HomeProps> = ({ latestEpisodes, allEpisodes }) => {
-  const { playList } = useContext(PlayerContext)
+  const { playList } = usePlayer()
 
   const episodeList = [...latestEpisodes, ...allEpisodes]
 

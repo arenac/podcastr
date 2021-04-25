@@ -8,14 +8,13 @@ import { convertDurationToTimeString } from '../../utils/convertDurationToTimeSt
 import { Episode } from '../../types/Episode'
 
 import styles from './episodes.module.scss'
-import { useContext } from 'react'
-import { PlayerContext } from '../../contexts/PlayerContext'
+import { usePlayer } from '../../contexts/PlayerContext'
 interface EpisodeProps {
   episode: Episode
 }
 
 const Episodes: React.VFC<EpisodeProps> = ({ episode }) => {
-  const { play } = useContext(PlayerContext)
+  const { play } = usePlayer()
   return(
     <div className={styles.episode}>
       <div className={styles.thumbnailContainer}>
