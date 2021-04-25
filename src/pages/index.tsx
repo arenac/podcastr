@@ -1,5 +1,6 @@
 import {GetStaticProps, GetServerSideProps } from 'next'
 import Image from 'next/image'
+import Link from 'next/link'
 import React, { useEffect } from 'react'
 import { format, parseISO } from 'date-fns'
 import enGB from 'date-fns/locale/en-GB'
@@ -17,7 +18,6 @@ interface Episode {
   publishedAt: string,
   duration: number,
   durationAsString: string,
-  description: string,
   url: string
 }
 interface HomeProps {
@@ -51,7 +51,9 @@ const Home: React.VFC<HomeProps> = ({ latestEpisodes, allEpisodes }) => {
               />
 
               <div className={styles.episodesDetails}>
-                <a href="">{episode.title}</a>
+                <Link href={`/episodes/${episode.id}`}>
+                  <a>{episode.title}</a>
+                </Link>
                 <p>{episode.members}</p>
                 <span>{episode.publishedAt}</span>
                 <span>{episode.durationAsString}</span>
@@ -71,12 +73,14 @@ const Home: React.VFC<HomeProps> = ({ latestEpisodes, allEpisodes }) => {
       <table cellSpacing={0}>
         
         <thead>
-          <th></th>
-          <th>Podcast</th>
-          <th>Members</th>
-          <th>Date</th>
-          <th>Duration</th>
-          <th></th>
+          <tr>
+            <th></th>
+            <th>Podcast</th>
+            <th>Members</th>
+            <th>Date</th>
+            <th>Duration</th>
+            <th></th>
+          </tr>
         </thead>
 
         <tbody>
@@ -92,7 +96,9 @@ const Home: React.VFC<HomeProps> = ({ latestEpisodes, allEpisodes }) => {
                 />
               </td>
               <td>
-                <a href="">{episode.title}</a>
+                <Link href={`/episodes/${episode.id}`}>
+                  <a>{episode.title}</a>
+                </Link>
               </td>
               <td>{episode.members}</td>
               <td style={{ width: 120}}>{episode.publishedAt}</td>
@@ -143,8 +149,8 @@ export const getStaticProps: GetStaticProps = async () => {
     publishedAt: format(parseISO(episode.published_at), 'yy/MMM/d', { locale: enGB }),
     duration: Number(episode.file.duration),
     durationAsString: convertDurationToTimeString(Number(episode.file.duration)),
-    description: episode.description,
-    url: episode.file.url
+    url: episode.file.url,
+
   })) as Episode[]
 
   const latestEpisodes = episodes.slice(0, 2)
