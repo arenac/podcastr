@@ -17,6 +17,7 @@ export interface PlayerContextData {
   playPrevious: () => void
   hasNext: boolean
   playNext: () => void
+  clearPlayerState: () => void
 }
 
 const PlayerContext = createContext({} as PlayerContextData)
@@ -57,7 +58,7 @@ const PlayerContextProvider: React.FC = ({ children }) => {
   }
 
   const hasPrevious = currentEpisodeIndex > 0
-  const hasNext = (currentEpisodeIndex + 1)  < episodes.length
+  const hasNext = isShuffling || (currentEpisodeIndex + 1)  < episodes.length
 
   const playPrevious = (): void => {
     if(hasPrevious) {
@@ -72,6 +73,11 @@ const PlayerContextProvider: React.FC = ({ children }) => {
     } else if(hasNext) {
       setCurrentEpisodeIndex(currentEpisodeIndex + 1)
     }
+  }
+
+  const clearPlayerState = () => {
+    setEpisodes([])
+    setCurrentEpisodeIndex(0)
   }
 
   return (
@@ -92,6 +98,7 @@ const PlayerContextProvider: React.FC = ({ children }) => {
         playPrevious,
         hasNext,
         playNext,
+        clearPlayerState,
       }}
     >
       { children }
