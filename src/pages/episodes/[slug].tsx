@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Head from 'next/head'
 import { format, parseISO } from 'date-fns'
 import { enGB } from 'date-fns/locale'
 import { GetStaticPaths, GetStaticProps } from 'next'
@@ -17,6 +18,9 @@ const Episodes: React.VFC<EpisodeProps> = ({ episode }) => {
   const { play } = usePlayer()
   return(
     <div className={styles.episode}>
+      <Head>
+        <title>{episode.title} | Podcastr</title>
+      </Head>
       <div className={styles.thumbnailContainer}>
         <Link href="/">
           <button type="button">

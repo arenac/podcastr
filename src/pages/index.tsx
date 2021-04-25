@@ -1,6 +1,7 @@
 import {GetStaticProps, GetServerSideProps } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import Head from 'next/head'
 import React, { useContext, useEffect } from 'react'
 import { format, parseISO } from 'date-fns'
 import enGB from 'date-fns/locale/en-GB'
@@ -32,6 +33,9 @@ const Home: React.VFC<HomeProps> = ({ latestEpisodes, allEpisodes }) => {
 
   return (
     <div className={styles.homePage}>
+      <Head>
+        <title>Home | Podcastr</title>
+      </Head>
       <section className={styles.latestEpisodes}>
         <h2>Latest launches</h2>
         <ul>
