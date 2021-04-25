@@ -29,7 +29,9 @@ interface HomeProps {
 }
 
 const Home: React.VFC<HomeProps> = ({ latestEpisodes, allEpisodes }) => {
-  const { play } = useContext(PlayerContext)
+  const { playList } = useContext(PlayerContext)
+
+  const episodeList = [...latestEpisodes, ...allEpisodes]
 
   // SPA
   // useEffect(() => {
@@ -43,7 +45,7 @@ const Home: React.VFC<HomeProps> = ({ latestEpisodes, allEpisodes }) => {
       <section className={styles.latestEpisodes}>
         <h2>Latest launches</h2>
         <ul>
-          {latestEpisodes.map((episode) => (
+          {latestEpisodes.map((episode, index) => (
             <li key={episode.id}>
               <Image 
                 src={episode.thumbnail} 
@@ -62,7 +64,7 @@ const Home: React.VFC<HomeProps> = ({ latestEpisodes, allEpisodes }) => {
                 <span>{episode.durationAsString}</span>
               </div>
 
-              <button type="button" onClick={() => play(episode)}>
+              <button type="button" onClick={() => playList(episodeList, index)}>
                 <img src="/play-green.svg" alt="Play episode"/>
               </button>
             </li>
@@ -87,7 +89,7 @@ const Home: React.VFC<HomeProps> = ({ latestEpisodes, allEpisodes }) => {
         </thead>
 
         <tbody>
-          {allEpisodes.map(episode => (
+          {allEpisodes.map((episode, index) => (
             <tr key={episode.id}>
               <td style={{ width: 72}}>
                 <Image
@@ -107,7 +109,7 @@ const Home: React.VFC<HomeProps> = ({ latestEpisodes, allEpisodes }) => {
               <td style={{ width: 120}}>{episode.publishedAt}</td>
               <td>{episode.durationAsString}</td>
               <td>
-                <button onClick={() => play(episode)}>
+                <button onClick={() => playList(episodeList, index + latestEpisodes.length)}>
                   <img src="/play-green.svg" alt="Play episode"/>
                 </button>
               </td>

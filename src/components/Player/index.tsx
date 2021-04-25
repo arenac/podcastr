@@ -17,6 +17,8 @@ const Player: React.VFC = () => {
     isPlaying, 
     togglePlay,
     setIsPlayingState,
+    playPrevious,
+    playNext,
   } = useContext(PlayerContext)
 
   useEffect(() => {
@@ -37,7 +39,7 @@ const Player: React.VFC = () => {
     <div className={styles.playerContainer}>
       <header>
         <img src="/playing.svg" alt="Playing now"/>
-        Playing now {episode?.title}
+        Playing now
       </header>
 
       { episode ? (
@@ -87,7 +89,7 @@ const Player: React.VFC = () => {
           <button type="button" disabled={!episode}>
             <img src="/shuffle.svg" alt="Shuffle"/>
           </button>
-          <button type="button" disabled={!episode}>
+          <button type="button" disabled={!episode} onClick={playPrevious}>
             <img src="/play-previous.svg" alt="Previous"/>
           </button>
           <button 
@@ -101,7 +103,7 @@ const Player: React.VFC = () => {
               : <img src="/play.svg" alt="Play"/>
             }
           </button>
-          <button type="button" disabled={!episode}>
+          <button type="button" disabled={!episode} onClick={playNext}>
             <img src="/play-next.svg" alt="Next"/>
           </button>
           <button type="button" disabled={!episode}>
